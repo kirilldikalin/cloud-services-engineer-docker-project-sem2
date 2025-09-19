@@ -140,3 +140,28 @@ docker exec momo-frontend sh -c 'touch /should_fail || echo RO_OK'
 touch: /should_fail: Read-only file system
 RO_OK
 ```
+
+
+### Масштабируемость и балансировка нагрузки
+
+```
+docker compose up -d --scale frontend=2 --scale backend=2
+WARN[0000] /Users/kirilldikalin/work/ITMO/practicum/cloud-services-engineer-docker-project-sem2/docker-compose.yml: the attribute `version` is obsolete, it will be ignored, please remove it to avoid potential confusion 
+[+] Running 5/5
+ ✔ Network cloud-services-engineer-docker-project-sem2_app_net       Created                                                        0.0s 
+ ✔ Container cloud-services-engineer-docker-project-sem2-backend-2   Started                                                        0.3s 
+ ✔ Container cloud-services-engineer-docker-project-sem2-backend-1   Started                                                        0.2s 
+ ✔ Container cloud-services-engineer-docker-project-sem2-frontend-2  Started                                                        0.5s 
+ ✔ Container cloud-services-engineer-docker-project-sem2-frontend-1  Started 
+```
+
+```
+docker compose ps
+
+WARN[0000] /Users/kirilldikalin/work/ITMO/practicum/cloud-services-engineer-docker-project-sem2/docker-compose.yml: the attribute `version` is obsolete, it will be ignored, please remove it to avoid potential confusion 
+NAME                                                     IMAGE               COMMAND                  SERVICE    CREATED         STATUS         PORTS
+cloud-services-engineer-docker-project-sem2-backend-1    momo-backend:0.1    "momo-store"             backend    5 seconds ago   Up 4 seconds   0.0.0.0:59471->8081/tcp
+cloud-services-engineer-docker-project-sem2-backend-2    momo-backend:0.1    "momo-store"             backend    5 seconds ago   Up 4 seconds   0.0.0.0:59490->8081/tcp
+cloud-services-engineer-docker-project-sem2-frontend-1   momo-frontend:0.1   "/docker-entrypoint.…"   frontend   5 seconds ago   Up 4 seconds   0.0.0.0:59491->8080/tcp
+cloud-services-engineer-docker-project-sem2-frontend-2   momo-frontend:0.1   "/docker-entrypoint.…"   frontend   5 seconds ago   Up 3 seconds   0.0.0.0:59492->8080/tcp
+```

@@ -1,4 +1,3 @@
-version: "3.9"
 
 services:
   backend:
@@ -6,9 +5,8 @@ services:
       context: ./backend
       dockerfile: Dockerfile
     image: momo-backend:0.1
-    container_name: momo-backend
     ports:
-      - "8081:8081"
+      - "8081"
     environment:
       - TZ=UTC
     networks:
@@ -20,9 +18,8 @@ services:
       context: ./frontend
       dockerfile: Dockerfile
     image: momo-frontend:0.1
-    container_name: momo-frontend
     ports:
-      - "80:8080"
+      - "8080"
     depends_on:
       - backend
     networks:
