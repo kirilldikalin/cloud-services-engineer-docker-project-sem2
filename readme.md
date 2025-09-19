@@ -100,3 +100,43 @@ momo-frontend  | 192.168.65.1 - - [19/Sep/2025:09:50:09 +0000] "HEAD / HTTP/1.1"
 ```
 
 Успешный успех =)
+
+## Проверка, что контейнеры не root
+
+```
+docker exec momo-backend id
+uid=10001(appuser) gid=100(users) groups=100(users)
+docker exec momo-frontend id
+uid=101(nginx) gid=101(nginx) groups=101(nginx)
+```
+
+## проверка, что открыты только нужные порты
+
+```
+docker image inspect momo-backend:0.1 --format '{{.Config.ExposedPorts}}'
+map[8081/tcp:{}]
+docker image inspect momo-frontend:0.1 --format '{{.Config.ExposedPorts}}'
+map[8080/tcp:{}]
+```
+
+## Пробуем писать в корень FS, должно падать
+
+```
+docker compose ps
+WARN[0000] /Users/kirilldikalin/work/ITMO/practicum/cloud-services-engineer-docker-project-sem2/docker-compose.yml: the attribute `version` is obsolete, it will be ignored, please remove it to avoid potential confusion 
+NAME            IMAGE               COMMAND                  SERVICE    CREATED         STATUS         PORTS
+momo-backend    momo-backend:0.1    "momo-store"             backend    5 seconds ago   Up 4 seconds   0.0.0.0:8081->8081/tcp
+momo-frontend   momo-frontend:0.1   "/docker-entrypoint.…"   frontend   4 seconds ago   Up 4 seconds   0.0.0.0:80->8080/tcp
+```
+
+```
+docker exec momo-backend sh -c 'touch /root/should_fail || echo RO_OK' 
+touch: cannot touch '/root/should_fail': Permission denied
+RO_OK
+```
+
+```
+docker exec momo-frontend sh -c 'touch /should_fail || echo RO_OK'
+touch: /should_fail: Read-only file system
+RO_OK
+```
