@@ -1,12 +1,21 @@
-
+# Инструкция
 
 ## Сборка и запуск бэка
 
+Запуск Docker
+
+```bash
 docker build -f backend/Dockerfile -t momo-backend:0.1 ./backend
-docker run -d --rm --name momo-backend -p 8081:8081 momo-backend:0.1
-curl -i http://localhost:8081/health
-docker logs -f momo-backend
-docker stop momo-backend
+docker run -d --rm -p 8081:8081 momo-backend:0.1
+docker build -f frontend/Dockerfile -t momo-frontend:0.1 ./frontend
+docker run -d --rm -p 80:8080 momo-frontend:0.1
+```
+
+Запуск через Compose
+```bash
+docker compose build
+docker compose up -d
+```
 
 ```
 HTTP/1.1 200 OK
