@@ -1,0 +1,42 @@
+services:
+  backend:
+    # чтение секрета из файла
+    environment:
+      - API_TOKEN_FILE=/run/secrets/api_token
+    volumes:
+      - ~/.momo/secrets/api_token:/run/secrets/api_token:ro
+
+    # изоляция
+    read_only: true
+    security_opt:
+      - no-new-privileges:true
+    cap_drop:
+      - ALL
+    tmpfs:
+      - /tmp:rw,noexec,nosuid,size=16m
+    pids_limit: 200
+    ulimits:
+      nofile:
+        soft: 1024
+        hard: 2048
+    mem_limit: "256m"
+    cpus: "0.50"
+
+  frontend:
+    # изоляция
+    read_only: true
+    security_opt:
+      - no-new-privileges:true
+    cap_drop:
+      - ALL
+    tmpfs:
+      - /var/run:rw,noexec,nosuid,size=16m
+      - /tmp:rw,noexec,nosuid,size=16m
+    # писать можно только в примонтированные тома
+    pids_limit: 200
+    ulimits:
+      nofile:
+        soft: 1024
+        hard: 4096
+    mem_limit: "128m"
+    cpus: "0.50"
