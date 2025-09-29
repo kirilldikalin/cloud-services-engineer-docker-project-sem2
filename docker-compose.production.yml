@@ -1,0 +1,23 @@
+services:
+  backend:
+    image: ${DOCKERHUB_USERNAME}/momo-backend:0.1
+    ports:
+      - "8081:8081"
+    environment:
+      - TZ=UTC
+    networks:
+      - app_net
+    restart: unless-stopped
+
+  frontend:
+    image: ${DOCKERHUB_USERNAME}/momo-frontend:0.1
+    ports:
+      - "8080:8080"
+    depends_on:
+      - backend
+    networks:
+      - app_net
+    restart: unless-stopped
+
+networks:
+  app_net:
